@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Anime Recommendation{% endblock %}</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <header class="p-3 bg-dark text-white">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <!-- Logo -->
+            <a href="{{ url_for('home') }}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+              <span class="fs-4">Anime Recommendation</span>
+            </a>
+      
+            <!-- Login/Signup or Logout/Me -->
+            <div class="text-end">
+              {% if current_user.is_authenticated %}
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light me-2">Sign Out</a>
+                <a href="{{ url_for('user_profile', user_id=current_user.id) }}" class="btn btn-warning">  Me  </a>
+              {% else %}
+                <a href="{{ url_for('register') }}" class="btn btn-outline-light me-2">Sign up</a>
+                <a href="{{ url_for('login') }}" class="btn btn-warning"> Login </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+    </header>
+
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-3 bg-dark text-white mt-5">
+        <div class="container mt-4">
+          <div class="row">
+            <!-- About Us -->
+            <div class="col-md-6">
+              <h5>About Us</h5>
+              <p class="small">
+                Anime Recommendation is a platform dedicated to recommending high-quality anime to users. 
+                This website is part of a course project designed to demonstrate front-end design and functionality implementation.
+              </p>
+            </div>
+      
+            <!-- Contact -->
+            <div class="col-md-6">
+              <h5>Contact</h5>
+              <p class="small">
+                If you have any questions or suggestions, feel free to reach out:
+              </p>
+              <ul class="list-unstyled">
+                <li>Email: student@example.com</li>
+                <li>Phone: +123 456 789</li>
+              </ul>
+            </div>
+          </div>
+      
+          <div class="text-center mt-4">
+            <p class="small">© 2024 Anime Recommendation. All rights reserved.</p>
+          </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+  </body>
+</html>

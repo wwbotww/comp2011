@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Anime Recommendation{% endblock %}
+
+{% block content %}
+<!-- Search Module -->
+<div class="container-fluid" style="background-color: #343a40; color: white; padding: 1.5rem 0;">
+  <div class="container">
+    <form id="search-form" class="d-flex justify-content-center" action="{{ url_for('search_anime') }}" method="POST">
+      {{ search_form.hidden_tag() }}
+      {{ search_form.query(class="form-control w-50 me-2", placeholder="Search for an anime") }}
+      <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+  </div>
+</div>
+
+<!-- Sections Module -->
+<div class="container my-5">
+  <div class="row g-3">
+    {% for section in sections %}
+    <div class="col-md-6">
+      <div class="bg-image text-white overflow-hidden" 
+           id="section-{{ loop.index }}" 
+           style="background-image: url('{{ section.background_image }}'); position: relative;">
+        
+        <!-- Add background for title and button -->
+        <div class="section-overlay p-4" style="background-color: rgba(0, 0, 0, 0.7); position: absolute; width: 100%; bottom: 0;">
+          <h2 class="display-6 text-white text-center">{{ section.title }}</h2>
+          <div class="text-center mt-3">
+            <button class="btn btn-light" type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#collapse-{{ loop.index }}" 
+                    aria-expanded="false">
+              View List
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section Expanded Content -->
+      <div class="collapse bg-dark text-white p-3" id="collapse-{{ loop.index }}">
+        <h3 class="text-center mb-4">Anime List</h3>
+        <div class="row g-3">
+          {% for anime in section.animes %}
+          <div class="col-12 col-md-4">
+            <div class="card anime-card">
+              <img src="{{ anime.image_url }}" class="card-img-top" alt="{{ anime.title }}">
+              <div class="card-body text-dark">
+                <h5 class="card-title">{{ anime.title }}</h5>
+                <p class="card-text">
+                  Rating: {{ anime.rating }}<br>
+                  Released: {{ anime.release_date }}
+                </p>
+                {% if current_user.is_authenticated %}
+                {% if anime.id in favorite_anime_ids %}
+                  <!-- Remove Favorite Button -->
+                  <form action="{{ url_for('remove_favorite') }}" method="POST">
+                    <input type="hidden" name="anime_id" value="{{ anime.id }}">
+                    {{ favorite_form.hidden_tag() }}
+                    <button type="submit" class="btn btn-sm btn-danger">Remove Favorite</button>
+                  </form>
+                {% else %}
+                  <!-- Add Favorite Button -->
+                  <form action="{{ url_for('add_favorite') }}" method="POST">
+                    <input type="hidden" name="anime_id" value="{{ anime.id }}">
+                    {{ favorite_form.hidden_tag() }}
+                    <button type="submit" class="btn btn-sm btn-primary">Favorite</button>
+                  </form>
+                {% endif %}
+              {% else %}
+                <p class="text-muted">Login to favorite this anime</p>
+              {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Search Results Modal -->
+<div class="modal fade" id="searchResultsModal" tabindex="-1" aria-labelledby="searchResultsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal content dynamically loaded via Ajax -->
+    </div>
+  </div>
+</div>
+
+{% endblock %}

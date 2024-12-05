@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<main class="form-signin">
+  <form method="POST" action="{{ url_for('login') }}">
+    {{ form.hidden_tag() }}
+    
+    <!-- Title -->
+    <h1 class="h3 mb-3 fw-normal mt-5">Please Login</h1>
+
+    <!-- Username Field -->
+    <div class="form-floating">
+      {{ form.username(class="form-control", id="floatingUsername", placeholder="Username") }}
+      <label for="floatingUsername">Username</label>
+    </div>
+
+    <!-- Password Field -->
+    <div class="form-floating">
+      {{ form.password(class="form-control", id="floatingPassword", placeholder="Password") }}
+      <label for="floatingPassword">Password</label>
+    </div>
+
+    <!-- Submit Button -->
+    {{ form.submit(class="w-100 btn btn-lg btn-primary mt-3") }}
+
+    <!-- Footer Note -->
+    <p class="mt-5 mb-3 text-muted">&copy; 2024 Anime Recommendation</p>
+  </form>
+</main>
+{% endblock %}

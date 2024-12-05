@@ -1,0 +1,39 @@
+<div class="modal-body">
+    <div class="row g-3">
+      {% if search_results %}
+      {% for anime in search_results %}
+      <div class="col-12 col-md-4">
+        <div class="card anime-card">
+          <img src="{{ anime.image_url }}" class="card-img-top" alt="{{ anime.title }}">
+          <div class="card-body text-dark">
+            <h5 class="card-title">{{ anime.title }}</h5>
+            <p class="card-text">
+              Rating: {{ anime.rating }}<br>
+              Released: {{ anime.release_date }}
+            </p>
+            {% if current_user.is_authenticated %}
+              {% if anime.id in favorite_anime_ids %}
+                <form action="{{ url_for('remove_favorite') }}" method="POST">
+                  <input type="hidden" name="anime_id" value="{{ anime.id }}">
+                  {{ favorite_form.hidden_tag() }}
+                  <button type="submit" class="btn btn-sm btn-danger">Remove Favorite</button>
+                </form>
+              {% else %}
+                <form action="{{ url_for('add_favorite') }}" method="POST">
+                  <input type="hidden" name="anime_id" value="{{ anime.id }}">
+                  {{ favorite_form.hidden_tag() }}
+                  <button type="submit" class="btn btn-sm btn-primary">Favorite</button>
+                </form>
+              {% endif %}
+            {% else %}
+              <p class="text-muted">Login to favorite this anime</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <p class="text-muted text-center">No results found for your search.</p>
+      {% endif %}
+    </div>
+  </div>

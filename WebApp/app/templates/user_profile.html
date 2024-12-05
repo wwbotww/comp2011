@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+
+<!-- User information -->
+<section class="profile-header">
+  <h1>{{ user.username }}</h1>
+  <p>Total Favorites: {{ user.favorites.count() }}</p>
+</section>
+
+<!-- Favorited anime -->
+<main class="bg-light-gray py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">Your Favorite Anime</h2>
+    
+    <!-- List -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="favorite-anime-list">
+      {% for favorite in favorites %}
+      <div class="col favorite-item {% if loop.index > 3 %}hidden{% endif %}">
+        <div class="favor-card shadow-sm">
+          <img src="{{ favorite.anime.image_url }}" class="favor-card-img-top" alt="{{ favorite.anime.title }}">
+          <div class="favor-card-body">
+            <h5 class="favor-card-title">{{ favorite.anime.title }}</h5>
+            <p class="favor-card-text">
+              Rating: {{ favorite.anime.rating }}<br>
+              Released: {{ favorite.anime.release_date }}
+            </p>
+            <form action="{{ url_for('remove_favorite') }}" method="POST">
+              <input type="hidden" name="anime_id" value="{{ favorite.anime.id }}">
+              {{ form.hidden_tag() }}
+              <button type="submit" class="btn btn-sm btn-danger">Remove Favorite</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Show More/Less button -->
+    <div class="text-center mt-4">
+      <button class="btn btn-primary" id="toggle-show-btn" onclick="toggleShow()">Show More</button>
+    </div>
+  </div>
+</main>
+{% endblock %}
